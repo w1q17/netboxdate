@@ -135,6 +135,7 @@ function createVMRow(vm) {
 
             // Обновляем статус
             const newStatus = getVMStatus(newDate);
+            console.log(`Обновленный статус: ${newStatus.text}, класс: ${newStatus.class}`);
             const statusBadge = tr.querySelector('.status-badge');
             statusBadge.className = `status-badge ${newStatus.class}`;
             statusBadge.textContent = newStatus.text;
