@@ -36,16 +36,14 @@ function createVMRow(vm) {
     tr.innerHTML = `
         <td>${vm.id}</td>
         <td>${vm.name}</td>
-        <td class="comments-cell">${comments}</td>
-        <td>
+        <td class="status-cell">
             <span class="status-badge ${statusClass}">${status}</span>
         </td>
-        <td>
+        <td class="comments-cell">${comments}</td>
+        <td class="date-cell">
             <input type="date" class="date-input" value="${currentDate}" id="date-${vm.id}">
-        </td>
-        <td>
             <button class="btn btn-update" onclick="updateDate(${vm.id})">
-                <i class="fas fa-save"></i> Сохранить
+                <i class="fas fa-save"></i>
             </button>
         </td>
     `;
