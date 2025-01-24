@@ -67,12 +67,12 @@ function createVMRow(vm) {
         <td>${vm.name}</td>
         <td>
             <div class="date-display">
+                <span class="date-text">${currentDate}</span>
                 <button class="edit-date-btn" type="button">
                     <i class="fas fa-calendar-alt"></i>
                 </button>
-                <span class="date-text">${currentDate}</span>
                 <input type="date" class="date-input" value="${vm.date_expiry || ''}" 
-                       style="display: none;">
+                       style="display: none; position: absolute; z-index: 100;">
             </div>
         </td>
         <td>
@@ -93,17 +93,16 @@ function createVMRow(vm) {
     
     editBtn.addEventListener('click', () => {
         if (dateInput.style.display === 'none') {
-            dateInput.style.display = 'inline-block';
-            dateText.style.display = 'none';
+            dateInput.style.display = 'block';
+            dateInput.focus();
             saveBtn.style.display = 'inline-block';
         } else {
             dateInput.style.display = 'none';
-            dateText.style.display = 'inline-block';
             saveBtn.style.display = 'none';
         }
     });
     
-    saveBtn.addEventListener('click', () => {
+    dateInput.addEventListener('change', () => {
         const newDate = dateInput.value;
         
         if (!newDate) {
@@ -129,7 +128,6 @@ function createVMRow(vm) {
         .then(data => {
             dateText.textContent = newDate || '-';
             dateInput.style.display = 'none';
-            dateText.style.display = 'inline-block';
             saveBtn.style.display = 'none';
             showNotification('Дата обновлена', 'success');
         })

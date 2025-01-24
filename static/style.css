@@ -289,26 +289,31 @@ body {
 .date-display {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: 8px;
+    position: relative;
+    justify-content: space-between;
 }
 
 .edit-date-btn {
     background: none;
     border: none;
-    color: var(--secondary);
     cursor: pointer;
-    padding: 0.25rem;
-    border-radius: 4px;
+    padding: 4px;
+    color: #666;
 }
 
 .edit-date-btn:hover {
-    background-color: rgba(52, 152, 219, 0.1);
+    color: #333;
 }
 
 .date-input {
-    display: none;
+    padding: 4px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: white;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
-.date-input.show {
-    display: block;
+.date-text {
+    flex-grow: 1;
 } 
