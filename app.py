@@ -3,6 +3,7 @@ import pynetbox
 import os
 from datetime import datetime
 import logging
+from config import NETBOX_CONFIG
 
 app = Flask(__name__)
 
@@ -11,13 +12,14 @@ logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
 # Инициализация подключения к Netbox
-NETBOX_URL = "http://your-netbox-url"
-NETBOX_TOKEN = "your-token"
+NETBOX_URL = NETBOX_CONFIG['URL']
+NETBOX_TOKEN = NETBOX_CONFIG['TOKEN']
 
 try:
     nb = pynetbox.api(
         NETBOX_URL,
-        token=NETBOX_TOKEN
+        token=NETBOX_TOKEN,
+        verify=False  # Добавим это для работы с самоподписанными сертификатами
     )
     # Проверка подключения
     nb.status()
