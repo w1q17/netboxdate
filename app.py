@@ -86,4 +86,4 @@ def update_vm_date(vm_id):
 
 if __name__ == '__main__':
     logger.info("🚀 Запуск сервера...")
-    app.run(debug=True, port=8000, host='0.0.0.0')  # добавляем host='0.0.0.0' для доступа извне 
+    app.run(debug=True, port=5000, host='0.0.0.0') 
