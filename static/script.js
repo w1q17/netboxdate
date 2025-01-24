@@ -151,7 +151,7 @@ function getVMStatus(dateExpiry) {
     
     if (daysUntilExpiry < 0) {
         return { text: 'Истек', class: 'status-expired' };
-    } else if (daysUntilExpiry <= 3) {
+    } else if (daysUntilExpiry <= 10) {
         return { text: 'Истекает скоро', class: 'status-expiring' };
     } else {
         return { text: 'Активен', class: 'status-active' };
