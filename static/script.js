@@ -67,58 +67,76 @@ function createVMRow(vm) {
         <td>${vm.name}</td>
         <td>
             <div class="date-display">
-                <span class="date-text">${currentDate}</span>
                 <button class="edit-date-btn" type="button">
-                    <i class="fas fa-calendar-check"></i>
+                    <i class="fas fa-calendar-alt"></i>
                 </button>
+                <span class="date-text">${currentDate}</span>
+                <input type="date" class="date-input" value="${vm.date_expiry || ''}" 
+                       style="display: none;">
             </div>
         </td>
         <td>
             <span class="status-badge ${status.class}">${status.text}</span>
         </td>
+        <td>
+            <button class="btn btn-update" style="display: none;">
+                <i class="fas fa-save"></i>
+            </button>
+        </td>
     `;
     
-    const dateBtn = tr.querySelector('.edit-date-btn');
+    // Добавляем обработчики событий после создания элементов
+    const editBtn = tr.querySelector('.edit-date-btn');
+    const dateInput = tr.querySelector('.date-input');
     const dateText = tr.querySelector('.date-text');
-    const statusBadge = tr.querySelector('.status-badge');
-
-    // Инициализируем flatpickr
-    flatpickr(dateBtn, {
-        locale: 'ru',
-        dateFormat: 'Y-m-d',
-        defaultDate: vm.date_expiry || '',
-        allowInput: false,
-        clickOpens: true,
-        onChange: function(selectedDates, dateStr) {
-            if (!dateStr) return;
-            
-            fetch(`/api/vms/${vm.id}`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    date_expiry: dateStr
-                })
-            })
-            .then(response => {
-                if (!response.ok) throw new Error('Network response was not ok');
-                return response.json();
-            })
-            .then(data => {
-                dateText.textContent = dateStr || '-';
-                showNotification('Дата обновлена', 'success');
-
-                // Обновляем статус
-                const newStatus = getVMStatus(dateStr);
-                statusBadge.className = `status-badge ${newStatus.class}`;
-                statusBadge.textContent = newStatus.text;
-            })
-            .catch(error => {
-                console.error('Ошибка:', error);
-                showNotification('Ошибка обновления', 'error');
-            });
+    const saveBtn = tr.querySelector('.btn-update');
+    
+    editBtn.addEventListener('click', () => {
+        if (dateInput.style.display === 'none') {
+            dateInput.style.display = 'inline-block';
+            dateText.style.display = 'none';
+            saveBtn.style.display = 'inline-block';
+        } else {
+            dateInput.style.display = 'none';
+            dateText.style.display = 'inline-block';
+            saveBtn.style.display = 'none';
         }
+    });
+    
+    saveBtn.addEventListener('click', () => {
+        const newDate = dateInput.value;
+        
+        if (!newDate) {
+            showNotification('Выберите дату', 'error');
+            return;
+        }
+        
+        fetch(`/api/vms/${vm.id}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                date_expiry: newDate
+            })
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            dateText.textContent = newDate || '-';
+            dateInput.style.display = 'none';
+            dateText.style.display = 'inline-block';
+            saveBtn.style.display = 'none';
+            showNotification('Дата обновлена', 'success');
+        })
+        .catch(error => {
+            console.error('Ошибка:', error);
+            showNotification('Ошибка обновления', 'error');
+        });
     });
     
     return tr;
