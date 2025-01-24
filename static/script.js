@@ -29,38 +29,21 @@ function loadVMs() {
 function createVMRow(vm) {
     const tr = document.createElement('tr');
     const currentDate = vm.date_expiry || '';
-    const comments = vm.comments || 'Нет комментария';
-    const status = vm.status ? vm.status.label : 'Неизвестно';
-    const statusClass = getStatusClass(vm.status ? vm.status.value : '');
     
     tr.innerHTML = `
         <td>${vm.id}</td>
         <td>${vm.name}</td>
-        <td class="status-cell">
-            <span class="status-badge ${statusClass}">${status}</span>
-        </td>
-        <td class="comments-cell">${comments}</td>
-        <td class="date-cell">
+        <td>
             <input type="date" class="date-input" value="${currentDate}" id="date-${vm.id}">
+        </td>
+        <td>
             <button class="btn btn-update" onclick="updateDate(${vm.id})">
-                <i class="fas fa-save"></i>
+                <i class="fas fa-save"></i> Сохранить
             </button>
         </td>
     `;
     
     return tr;
-}
-
-function getStatusClass(status) {
-    const statusMap = {
-        'active': 'status-active',
-        'offline': 'status-offline',
-        'planned': 'status-planned',
-        'staged': 'status-staged',
-        'failed': 'status-failed',
-        'decommissioning': 'status-decommissioning',
-    };
-    return statusMap[status] || 'status-unknown';
 }
 
 function filterVMs() {
