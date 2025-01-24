@@ -12,7 +12,7 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 app = Flask(__name__, 
     template_folder='templates',  # явно указываем папку с шаблонами
-    static_folder='/var/www/netboxdate/static',  # Обновляем путь
+    static_folder='/root/netboxdate/static',  # Обновляем путь
     static_url_path='/static'
 )
 

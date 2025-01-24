@@ -35,20 +35,74 @@ function createVMRow(vm) {
         <td>${vm.name}</td>
         <td>
             <div class="date-display">
-                <button class="edit-date-btn" onclick="toggleDateEdit(${vm.id})">
+                <button class="edit-date-btn" type="button">
                     <i class="fas fa-calendar-alt"></i>
                 </button>
-                <span id="date-text-${vm.id}">${currentDate}</span>
+                <span class="date-text">${currentDate}</span>
                 <input type="date" class="date-input" value="${vm.date_expiry || ''}" 
-                       id="date-${vm.id}" onchange="updateDate(${vm.id})">
+                       style="display: none;">
             </div>
         </td>
         <td>
-            <button class="btn btn-update" onclick="updateDate(${vm.id})">
-                <i class="fas fa-save"></i> Сохранить
+            <button class="btn btn-update" style="display: none;">
+                <i class="fas fa-save"></i>
             </button>
         </td>
     `;
+    
+    // Добавляем обработчики событий после создания элементов
+    const editBtn = tr.querySelector('.edit-date-btn');
+    const dateInput = tr.querySelector('.date-input');
+    const dateText = tr.querySelector('.date-text');
+    const saveBtn = tr.querySelector('.btn-update');
+    
+    editBtn.addEventListener('click', () => {
+        if (dateInput.style.display === 'none') {
+            dateInput.style.display = 'inline-block';
+            dateText.style.display = 'none';
+            saveBtn.style.display = 'inline-block';
+        } else {
+            dateInput.style.display = 'none';
+            dateText.style.display = 'inline-block';
+            saveBtn.style.display = 'none';
+        }
+    });
+    
+    saveBtn.addEventListener('click', () => {
+        const newDate = dateInput.value;
+        
+        if (!newDate) {
+            showNotification('Выберите дату', 'error');
+            return;
+        }
+        
+        fetch(`/api/vms/${vm.id}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                date_expiry: newDate
+            })
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            dateText.textContent = newDate || '-';
+            dateInput.style.display = 'none';
+            dateText.style.display = 'inline-block';
+            saveBtn.style.display = 'none';
+            showNotification('Дата обновлена', 'success');
+        })
+        .catch(error => {
+            console.error('Ошибка:', error);
+            showNotification('Ошибка обновления', 'error');
+        });
+    });
     
     return tr;
 }
@@ -60,45 +114,6 @@ function filterVMs() {
     Array.from(rows).forEach(row => {
         const vmName = row.cells[1].textContent.toLowerCase();
         row.style.display = vmName.includes(searchText) ? '' : 'none';
-    });
-}
-
-function toggleDateEdit(vmId) {
-    const dateInput = document.getElementById(`date-${vmId}`);
-    const dateText = document.getElementById(`date-text-${vmId}`);
-    
-    if (dateInput.classList.contains('show')) {
-        dateInput.classList.remove('show');
-        dateText.style.display = 'inline';
-    } else {
-        dateInput.classList.add('show');
-        dateText.style.display = 'none';
-    }
-}
-
-function updateDate(vmId) {
-    const dateInput = document.getElementById(`date-${vmId}`);
-    const dateText = document.getElementById(`date-text-${vmId}`);
-    const newDate = dateInput.value;
-    
-    fetch(`/api/vms/${vmId}`, {
-        method: 'PUT',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-            date_expiry: newDate
-        })
-    })
-    .then(response => response.json())
-    .then(data => {
-        dateText.textContent = newDate || '-';
-        dateInput.classList.remove('show');
-        dateText.style.display = 'inline';
-        showNotification('Дата обновлена', 'success');
-    })
-    .catch(error => {
-        showNotification('Ошибка обновления', 'error');
     });
 }
 
