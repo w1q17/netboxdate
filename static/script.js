@@ -69,7 +69,7 @@ function createVMRow(vm) {
             <div class="date-display">
                 <span class="date-text">${currentDate}</span>
                 <button class="edit-date-btn" type="button">
-                    <i class="fas fa-calendar-alt"></i>
+                    <i class="fas fa-calendar-check"></i>
                 </button>
             </div>
         </td>
