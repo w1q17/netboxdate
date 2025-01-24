@@ -37,7 +37,7 @@ function updateStats(vms) {
         if (vm.date_expiry) {
             const expiryDate = new Date(vm.date_expiry);
             const daysUntilExpiry = Math.floor((expiryDate - today) / (1000 * 60 * 60 * 24));
-            if (daysUntilExpiry <= 30 && daysUntilExpiry > 0) {
+            if (daysUntilExpiry <= 3 && daysUntilExpiry > 0) {
                 expiringSoon++;
             }
         }
