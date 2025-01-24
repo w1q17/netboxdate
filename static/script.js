@@ -81,11 +81,18 @@ function createVMRow(vm) {
     const dateBtn = tr.querySelector('.edit-date-btn');
     const dateText = tr.querySelector('.date-text');
     
+    // Удаляем старый input, если он есть
+    const oldInput = tr.querySelector('.date-input');
+    if (oldInput) {
+        oldInput.remove();
+    }
+    
+    // Инициализируем flatpickr
     flatpickr(dateBtn, {
         locale: 'ru',
         dateFormat: 'Y-m-d',
         defaultDate: vm.date_expiry || '',
-        allowInput: true,
+        allowInput: false,
         clickOpens: true,
         onChange: function(selectedDates, dateStr) {
             if (!dateStr) return;

@@ -293,6 +293,11 @@ body {
     justify-content: space-between;
 }
 
+.date-text {
+    flex-grow: 1;
+    display: inline-block !important;
+}
+
 .edit-date-btn {
     background: none;
     border: none;
@@ -305,16 +310,9 @@ body {
     color: #333;
 }
 
-.date-input {
-    padding: 4px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    background-color: white;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-
-.date-text {
-    flex-grow: 1;
+/* Скрываем стандартный input type="date" */
+input[type="date"] {
+    display: none !important;
 }
 
 /* Стили для Flatpickr */
