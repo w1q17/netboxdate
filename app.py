@@ -10,7 +10,10 @@ import requests
 # Отключаем предупреждения о небезопасном SSL
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
-app = Flask(__name__)
+app = Flask(__name__, 
+    template_folder='templates',  # явно указываем папку с шаблонами
+    static_folder='static'        # явно указываем папку со статическими файлами
+)
 
 # Настройка логирования
 logging.basicConfig(level=logging.DEBUG)
@@ -38,7 +41,12 @@ except Exception as e:
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    try:
+        logger.info("📄 Запрос главной страницы")
+        return render_template('index.html')
+    except Exception as e:
+        logger.error(f"❌ Ошибка при рендеринге главной страницы: {str(e)}")
+        return f"Ошибка: {str(e)}", 500
 
 @app.route('/api/vms', methods=['GET'])
 def get_vms():
@@ -78,4 +86,4 @@ def update_vm_date(vm_id):
 
 if __name__ == '__main__':
     logger.info("🚀 Запуск сервера...")
-    app.run(debug=True, port=8000) 
+    app.run(debug=True, port=8000, host='0.0.0.0')  # добавляем host='0.0.0.0' для доступа извне 
