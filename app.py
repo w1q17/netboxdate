@@ -5,6 +5,7 @@ from datetime import datetime
 import logging
 from config import NETBOX_CONFIG
 import urllib3
+import requests
 
 # Отключаем предупреждения о небезопасном SSL
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
@@ -20,11 +21,15 @@ NETBOX_URL = NETBOX_CONFIG['URL']
 NETBOX_TOKEN = NETBOX_CONFIG['TOKEN']
 
 try:
+    session = requests.Session()
+    session.verify = False
+    
     nb = pynetbox.api(
         NETBOX_URL,
-        token=NETBOX_TOKEN,
-        verify=False  # Отключаем проверку SSL сертификата
+        token=NETBOX_TOKEN
     )
+    nb.http_session = session
+    
     # Проверка подключения
     nb.status()
     logger.info(f"✅ Успешное подключение к Netbox по адресу: {NETBOX_URL}")
