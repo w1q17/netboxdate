@@ -56,9 +56,11 @@ def get_vms():
         vms = nb.virtualization.virtual_machines.all()
         vm_list = []
         for vm in vms:
+            logger.debug(f"Обработка VM: {vm.name}")
             vm_data = {
                 'id': vm.id,
                 'name': vm.name,
+                'comments': vm.comments or '',  # Добавляем комментарии
                 'date_expiry': vm.custom_fields.get('date_expiry', '')
             }
             vm_list.append(vm_data)

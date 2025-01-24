@@ -284,4 +284,28 @@ body {
 .status-expired {
     background-color: rgba(231, 76, 60, 0.1);
     color: var(--danger);
+}
+
+.comments-cell {
+    max-width: 300px;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    color: #666;
+    font-size: 0.9em;
+    font-style: italic;
+}
+
+/* Обновим стили таблицы для лучшего отображения */
+.data-table td {
+    padding: 1rem;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+    vertical-align: top;
+}
+
+.data-table th {
+    background-color: #f8f9fa;
+    padding: 1rem;
+    text-align: left;
+    font-weight: 500;
 } 
