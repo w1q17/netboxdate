@@ -85,6 +85,8 @@ function createVMRow(vm) {
         locale: 'ru',
         dateFormat: 'Y-m-d',
         defaultDate: vm.date_expiry || '',
+        allowInput: true,
+        clickOpens: true,
         onChange: function(selectedDates, dateStr) {
             if (!dateStr) return;
             
@@ -104,6 +106,9 @@ function createVMRow(vm) {
             .then(data => {
                 dateText.textContent = dateStr || '-';
                 showNotification('Дата обновлена', 'success');
+                const newStatus = getVMStatus(dateStr);
+                tr.querySelector('.status-badge').className = `status-badge ${newStatus.class}`;
+                tr.querySelector('.status-badge').textContent = newStatus.text;
             })
             .catch(error => {
                 console.error('Ошибка:', error);
