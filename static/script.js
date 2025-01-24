@@ -143,15 +143,20 @@ function createVMRow(vm) {
 }
 
 function getVMStatus(dateExpiry) {
-    if (!dateExpiry) return { text: 'Нет даты', class: 'status-expired' };
+    if (!dateExpiry) {
+        console.log("Нет даты, возвращаем статус 'Нет даты'");
+        return { text: 'Нет даты', class: 'status-expired' };
+    }
     
     const today = new Date();
     const expiryDate = new Date(dateExpiry);
     const daysUntilExpiry = Math.floor((expiryDate - today) / (1000 * 60 * 60 * 24));
     
+    console.log(`Дата истечения: ${expiryDate}, Сегодня: ${today}, Дней до истечения: ${daysUntilExpiry}`);
+    
     if (daysUntilExpiry < 0) {
         return { text: 'Истек', class: 'status-expired' };
-    } else if (daysUntilExpiry <= 10) {
+    } else if (daysUntilExpiry <= 3) { // Проверка на 3 дня
         return { text: 'Истекает скоро', class: 'status-expiring' };
     } else {
         return { text: 'Активен', class: 'status-active' };
