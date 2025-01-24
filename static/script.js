@@ -80,6 +80,7 @@ function createVMRow(vm) {
     
     const dateBtn = tr.querySelector('.edit-date-btn');
     const dateText = tr.querySelector('.date-text');
+    const statusBadge = tr.querySelector('.status-badge');
 
     // Инициализируем flatpickr
     flatpickr(dateBtn, {
@@ -107,9 +108,11 @@ function createVMRow(vm) {
             .then(data => {
                 dateText.textContent = dateStr || '-';
                 showNotification('Дата обновлена', 'success');
+
+                // Обновляем статус
                 const newStatus = getVMStatus(dateStr);
-                tr.querySelector('.status-badge').className = `status-badge ${newStatus.class}`;
-                tr.querySelector('.status-badge').textContent = newStatus.text;
+                statusBadge.className = `status-badge ${newStatus.class}`;
+                statusBadge.textContent = newStatus.text;
             })
             .catch(error => {
                 console.error('Ошибка:', error);
