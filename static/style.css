@@ -284,4 +284,31 @@ body {
 .status-expired {
     background-color: rgba(231, 76, 60, 0.1);
     color: var(--danger);
+}
+
+.date-display {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.edit-date-btn {
+    background: none;
+    border: none;
+    color: var(--secondary);
+    cursor: pointer;
+    padding: 0.25rem;
+    border-radius: 4px;
+}
+
+.edit-date-btn:hover {
+    background-color: rgba(52, 152, 219, 0.1);
+}
+
+.date-input {
+    display: none;
+}
+
+.date-input.show {
+    display: block;
 } 

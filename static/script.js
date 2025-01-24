@@ -28,13 +28,20 @@ function loadVMs() {
 
 function createVMRow(vm) {
     const tr = document.createElement('tr');
-    const currentDate = vm.date_expiry || '';
+    const currentDate = vm.date_expiry || '-';
     
     tr.innerHTML = `
         <td>${vm.id}</td>
         <td>${vm.name}</td>
         <td>
-            <input type="date" class="date-input" value="${currentDate}" id="date-${vm.id}">
+            <div class="date-display">
+                <button class="edit-date-btn" onclick="toggleDateEdit(${vm.id})">
+                    <i class="fas fa-calendar-alt"></i>
+                </button>
+                <span id="date-text-${vm.id}">${currentDate}</span>
+                <input type="date" class="date-input" value="${vm.date_expiry || ''}" 
+                       id="date-${vm.id}" onchange="updateDate(${vm.id})">
+            </div>
         </td>
         <td>
             <button class="btn btn-update" onclick="updateDate(${vm.id})">
@@ -56,8 +63,22 @@ function filterVMs() {
     });
 }
 
+function toggleDateEdit(vmId) {
+    const dateInput = document.getElementById(`date-${vmId}`);
+    const dateText = document.getElementById(`date-text-${vmId}`);
+    
+    if (dateInput.classList.contains('show')) {
+        dateInput.classList.remove('show');
+        dateText.style.display = 'inline';
+    } else {
+        dateInput.classList.add('show');
+        dateText.style.display = 'none';
+    }
+}
+
 function updateDate(vmId) {
     const dateInput = document.getElementById(`date-${vmId}`);
+    const dateText = document.getElementById(`date-text-${vmId}`);
     const newDate = dateInput.value;
     
     fetch(`/api/vms/${vmId}`, {
@@ -71,6 +92,9 @@ function updateDate(vmId) {
     })
     .then(response => response.json())
     .then(data => {
+        dateText.textContent = newDate || '-';
+        dateInput.classList.remove('show');
+        dateText.style.display = 'inline';
         showNotification('Дата обновлена', 'success');
     })
     .catch(error => {
