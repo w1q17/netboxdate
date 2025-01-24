@@ -71,70 +71,45 @@ function createVMRow(vm) {
                 <button class="edit-date-btn" type="button">
                     <i class="fas fa-calendar-alt"></i>
                 </button>
-                <input type="date" class="date-input" value="${vm.date_expiry || ''}" 
-                       style="display: none; position: absolute; z-index: 100;">
             </div>
         </td>
         <td>
             <span class="status-badge ${status.class}">${status.text}</span>
         </td>
-        <td>
-            <button class="btn btn-update" style="display: none;">
-                <i class="fas fa-save"></i>
-            </button>
-        </td>
     `;
     
-    // Добавляем обработчики событий после создания элементов
-    const editBtn = tr.querySelector('.edit-date-btn');
-    const dateInput = tr.querySelector('.date-input');
+    const dateBtn = tr.querySelector('.edit-date-btn');
     const dateText = tr.querySelector('.date-text');
-    const saveBtn = tr.querySelector('.btn-update');
     
-    editBtn.addEventListener('click', () => {
-        if (dateInput.style.display === 'none') {
-            dateInput.style.display = 'block';
-            dateInput.focus();
-            saveBtn.style.display = 'inline-block';
-        } else {
-            dateInput.style.display = 'none';
-            saveBtn.style.display = 'none';
-        }
-    });
-    
-    dateInput.addEventListener('change', () => {
-        const newDate = dateInput.value;
-        
-        if (!newDate) {
-            showNotification('Выберите дату', 'error');
-            return;
-        }
-        
-        fetch(`/api/vms/${vm.id}`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                date_expiry: newDate
+    flatpickr(dateBtn, {
+        locale: 'ru',
+        dateFormat: 'Y-m-d',
+        defaultDate: vm.date_expiry || '',
+        onChange: function(selectedDates, dateStr) {
+            if (!dateStr) return;
+            
+            fetch(`/api/vms/${vm.id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    date_expiry: dateStr
+                })
             })
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json();
-        })
-        .then(data => {
-            dateText.textContent = newDate || '-';
-            dateInput.style.display = 'none';
-            saveBtn.style.display = 'none';
-            showNotification('Дата обновлена', 'success');
-        })
-        .catch(error => {
-            console.error('Ошибка:', error);
-            showNotification('Ошибка обновления', 'error');
-        });
+            .then(response => {
+                if (!response.ok) throw new Error('Network response was not ok');
+                return response.json();
+            })
+            .then(data => {
+                dateText.textContent = dateStr || '-';
+                showNotification('Дата обновлена', 'success');
+            })
+            .catch(error => {
+                console.error('Ошибка:', error);
+                showNotification('Ошибка обновления', 'error');
+            });
+        }
     });
     
     return tr;

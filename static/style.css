@@ -290,7 +290,6 @@ body {
     display: flex;
     align-items: center;
     gap: 8px;
-    position: relative;
     justify-content: space-between;
 }
 
@@ -316,4 +315,20 @@ body {
 
 .date-text {
     flex-grow: 1;
+}
+
+/* Стили для Flatpickr */
+.flatpickr-calendar {
+    background: #fff;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
+
+.flatpickr-day.selected {
+    background: var(--primary);
+    border-color: var(--primary);
+}
+
+.flatpickr-day:hover {
+    background: var(--primary-light);
 } 
