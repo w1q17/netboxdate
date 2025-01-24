@@ -132,6 +132,12 @@ function createVMRow(vm) {
             dateText.style.display = 'inline-block';
             saveBtn.style.display = 'none';
             showNotification('Дата обновлена', 'success');
+
+            // Обновляем статус
+            const newStatus = getVMStatus(newDate);
+            const statusBadge = tr.querySelector('.status-badge');
+            statusBadge.className = `status-badge ${newStatus.class}`;
+            statusBadge.textContent = newStatus.text;
         })
         .catch(error => {
             console.error('Ошибка:', error);
