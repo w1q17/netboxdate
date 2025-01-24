@@ -4,6 +4,10 @@ import os
 from datetime import datetime
 import logging
 from config import NETBOX_CONFIG
+import urllib3
+
+# Отключаем предупреждения о небезопасном SSL
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 app = Flask(__name__)
 
@@ -19,7 +23,7 @@ try:
     nb = pynetbox.api(
         NETBOX_URL,
         token=NETBOX_TOKEN,
-        verify=False  # Добавим это для работы с самоподписанными сертификатами
+        verify=False  # Отключаем проверку SSL сертификата
     )
     # Проверка подключения
     nb.status()
