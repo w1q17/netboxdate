@@ -8,8 +8,22 @@
 <body>
     <div class="container">
         <h1>Управление виртуальными машинами Netbox</h1>
+        <div id="loading">Загрузка данных...</div>
         <div id="vm-list"></div>
     </div>
+    
+    <!-- Добавим проверку загрузки скрипта -->
+    <script>
+        console.log("HTML загружен");
+    </script>
     <script src="{{ url_for('static', filename='script.js') }}"></script>
+    <script>
+        // Проверим, что script.js загрузился
+        if (typeof loadVMs === 'function') {
+            console.log("script.js загружен успешно");
+        } else {
+            console.log("Ошибка загрузки script.js");
+        }
+    </script>
 </body>
 </html> 
