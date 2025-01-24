@@ -177,24 +177,21 @@ body {
     border-collapse: collapse;
 }
 
-.data-table th {
-    background-color: #f8f9fa;
+.data-table th,
+.data-table td {
     padding: 1rem;
     text-align: left;
-    font-weight: 500;
-    color: var(--dark);
-    border-bottom: 2px solid #ddd;
+    border-bottom: 1px solid #ddd;
+}
+
+.data-table th {
+    background-color: #f8f9fa;
 }
 
 .data-table th i {
     margin-left: 0.5rem;
     color: #95a5a6;
     cursor: pointer;
-}
-
-.data-table td {
-    padding: 1rem;
-    border-bottom: 1px solid #ddd;
 }
 
 .data-table tr:hover {

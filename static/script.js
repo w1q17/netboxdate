@@ -1,75 +1,40 @@
 document.addEventListener('DOMContentLoaded', function() {
-    console.log("Загрузка страницы...");
     loadVMs();
     
     document.getElementById('search-input').addEventListener('input', filterVMs);
-    document.getElementById('refresh-btn').addEventListener('click', function() {
-        this.classList.add('rotating');
-        loadVMs();
-        setTimeout(() => this.classList.remove('rotating'), 1000);
-    });
+    document.getElementById('refresh-btn').addEventListener('click', loadVMs);
 });
 
 function loadVMs() {
-    const loading = document.getElementById('loading');
-    loading.style.display = 'flex';
+    const vmList = document.getElementById('vm-list');
+    vmList.innerHTML = '<tr><td colspan="4" style="text-align: center;">Загрузка данных...</td></tr>';
     
     fetch('/api/vms')
         .then(response => response.json())
         .then(vms => {
-            updateStats(vms);
-            renderVMTable(vms);
-            loading.style.display = 'none';
-            showNotification('Данные успешно загружены', 'success');
+            vmList.innerHTML = '';
+            vms.forEach(vm => {
+                const row = createVMRow(vm);
+                vmList.appendChild(row);
+            });
+            showNotification('Данные загружены', 'success');
         })
         .catch(error => {
             console.error('Ошибка:', error);
-            loading.style.display = 'none';
-            showNotification('Ошибка при загрузке данных', 'error');
+            vmList.innerHTML = '<tr><td colspan="4" style="text-align: center; color: red;">Ошибка загрузки данных</td></tr>';
+            showNotification('Ошибка загрузки', 'error');
         });
-}
-
-function updateStats(vms) {
-    const today = new Date();
-    let expiringSoon = 0;
-    
-    vms.forEach(vm => {
-        if (vm.date_expiry) {
-            const expiryDate = new Date(vm.date_expiry);
-            const daysUntilExpiry = Math.floor((expiryDate - today) / (1000 * 60 * 60 * 24));
-            if (daysUntilExpiry <= 30 && daysUntilExpiry > 0) {
-                expiringSoon++;
-            }
-        }
-    });
-    
-    document.getElementById('vm-count').textContent = vms.length;
-    document.getElementById('expiring-soon').textContent = expiringSoon;
-}
-
-function renderVMTable(vms) {
-    const vmList = document.getElementById('vm-list');
-    vmList.innerHTML = '';
-    
-    vms.forEach(vm => {
-        const row = createVMRow(vm);
-        vmList.appendChild(row);
-    });
 }
 
 function createVMRow(vm) {
     const tr = document.createElement('tr');
     const currentDate = vm.date_expiry || '';
-    const status = getVMStatus(vm.date_expiry);
     
     tr.innerHTML = `
         <td>${vm.id}</td>
         <td>${vm.name}</td>
         <td>
             <input type="date" class="date-input" value="${currentDate}" id="date-${vm.id}">
-        </td>
-        <td>
-            <span class="status-badge ${status.class}">${status.text}</span>
         </td>
         <td>
             <button class="btn btn-update" onclick="updateDate(${vm.id})">
@@ -79,22 +44,6 @@ function createVMRow(vm) {
     `;
     
     return tr;
-}
-
-function getVMStatus(dateExpiry) {
-    if (!dateExpiry) return { text: 'Нет даты', class: 'status-expired' };
-    
-    const today = new Date();
-    const expiryDate = new Date(dateExpiry);
-    const daysUntilExpiry = Math.floor((expiryDate - today) / (1000 * 60 * 60 * 24));
-    
-    if (daysUntilExpiry < 0) {
-        return { text: 'Истек', class: 'status-expired' };
-    } else if (daysUntilExpiry <= 30) {
-        return { text: 'Истекает скоро', class: 'status-expiring' };
-    } else {
-        return { text: 'Активен', class: 'status-active' };
-    }
 }
 
 function filterVMs() {
@@ -122,11 +71,10 @@ function updateDate(vmId) {
     })
     .then(response => response.json())
     .then(data => {
-        showNotification('Дата успешно обновлена', 'success');
-        loadVMs();
+        showNotification('Дата обновлена', 'success');
     })
     .catch(error => {
-        showNotification('Ошибка при обновлении даты', 'error');
+        showNotification('Ошибка обновления', 'error');
     });
 }
 
